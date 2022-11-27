@@ -1,0 +1,11 @@
+name:MUHAMMAD AHMED
+password:023456789
+regNumber:FA21-BCS-030
+degree:BSCS
+gender:MALE
+dateOfBirth:17-11-2002
+gmail:MA@gmail.com
+studentCnic:37405-1976057-5
+contactNumber:0321-1537443
+fatherName:IRSHAD ALI
+fatherCnic:37405-1976057-5
