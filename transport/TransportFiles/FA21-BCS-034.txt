@@ -1,0 +1,9 @@
+Registration No                  : FA21-BCS-034
+Bus ID                           : 1969
+Route                            : 8
+Stop Name                        : Bhander
+Fee                              : 21000
+PickUp Timing                    : 10 AM
+DropOff Timing                   : 2:30 PM
+Registered at                    : 07-12-2022 || 12:2 AM
+

@@ -229,20 +229,7 @@ public class Main {
 			System.out.println("Errored occured!");
 		}
 
-		// Storing balance in student cafe module on first time registration
-		// try{
-		// 	File file = new File("cafe/balance/"+regNumber+".txt");
-		// 	file.createNewFile();
-		// 	FileWriter writer = new FileWriter(file);
-		// 	writer.write(4000);
-		// 	writer.close();
-		// }
-		// catch(Exception e){
-		// 	System.out.print("Exception occured!");
-		// }
 		Choices();
-
-		
 
     }
 
@@ -300,7 +287,6 @@ public class Main {
 					}
 
 					if(userExisted){
-		        		management(regNumber);
 						break;
 					}
 					else{
@@ -338,7 +324,6 @@ public class Main {
     		return("Cafe System.");
     	}
     	else if(c==5) {
-    		Choices();
 			return("Exiting Management System.");
 		}
 		else {
@@ -347,50 +332,52 @@ public class Main {
 		}
     }
 
+    public static int Menu() {
+    	try {
+    		System.out.println("\n*******************************************************\n");
+    		System.out.println("\tWelcome "+stdName);
+    		System.out.println("\n*********************************************************");
+    		System.out.println("\n1. Manage Courses");
+        	System.out.println("2. Transport Management");
+        	System.out.println("3. Library Management");
+        	System.out.println("4. Cafe Management");
+        	System.out.println("5. Leave Menu");
+    		System.out.print("Enter your choice : ");
+    		int choice = input.nextInt();
+    		return(choice);
+    	}
+    	catch(InputMismatchException e) {
+			return(-1);
+		}
+    }
+    
     // AFTER-LOGIN
     public static void management(String regNum){
-    	System.out.println("\n*******************************************************\n");
-		System.out.println("\tWelcome "+stdName);
-		System.out.println("\n*********************************************************");
-		System.out.println("\n1. Manage Courses");
-    	System.out.println("2. Transport Management");
-    	System.out.println("3. Library Management");
-    	System.out.println("4. Cafe Management");
-    	System.out.println("5. Leave Menu");
-		System.out.print("Enter your choice : ");
-		int choice = input.nextInt();
-		
-		Systems(choice, regNum);
+    	int choice = Menu();
 		
 		while(choice != 5) {
-			System.out.println("\n*******************************************************\n");
-			System.out.println("\tWelcome "+stdName);
-			System.out.println("\n*********************************************************");
-			System.out.println("\n1. Manage Courses");
-			System.out.println("2. Transport Management");
-			System.out.println("3. Library Management");
-			System.out.println("4. Cafe Management");
-			System.out.println("5. Leave Menu");
-			System.out.print("Enter your choice : ");
-			choice = input.nextInt();//12
-
-			Systems(choice, regNum);
-    		
+			
+			if(choice!=-1) {
+				String res = Systems(choice, regNum);
+				if(res.equalsIgnoreCase("Exiting Management System.")) {
+    				break;
+    			}
+			}
+			
+			choice = Menu();
     	}
 
     }
 
 
-
     // Intial Choices
     public static void Choices(){
-    	System.out.println("*******************************************************\n");
-        System.out.println("\tUniversity Management System\n");
-        System.out.println("*******************************************************");
-        
     	boolean b=true;
         while(b){
             try{
+            	System.out.println("*******************************************************\n");
+                System.out.println("\tUniversity Management System\n");
+                System.out.println("*******************************************************");
             	System.out.println("\n1. Registration");
 	            System.out.println("2. Login ");
 	            System.out.println("3. Exit");
@@ -399,17 +386,18 @@ public class Main {
 	            switch(c){
 	            	case 1 : {
 		            		registration();
-		            		b=false;
+		            		//b=false;
 		            		break;
 	            			}
 	            	case 2 : {
 		            		login();
-		            		b=false;
+		            		management(regNumber);
 		            		break;
 	            			}
 	            	case 3 : {
 	            				System.out.println("\n*********Thanks**********");
-	            				System.exit(0);
+//	            				System.exit(0);
+	            				b=false;
 	            				break;
 	            			}
 	            	default:{

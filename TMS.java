@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 import java.time.LocalDateTime;
@@ -95,18 +96,24 @@ public class TMS {
 		
 		//Enter 5.
 		else if(choice==5) {
-			if(!feePaid){
+//			if(!feePaid){
+			if(!isRegistered) {
+				System.out.println("Your profile doesn't exist! Register first!");
+				return("No Bus Registered!");
+			}
+			else if(!feePaid) {
 				paymentMethod(isRegistered);
 				feePaid = true;
 				return("Fee Paid!");
 			}
-			else if(!isRegistered) {
-				System.out.println("Your profile doesn't exist! Register first!");
-				return("No Bus Registered!");
-			}
-			else {
+			else if(feePaid && isRegistered) {
 				System.out.println("You have already paid the fee !");
 				return("Fee Already Paid!");
+			}
+
+			else {
+				System.out.println("Something went wrong");
+				return("Error!");
 			}
 		}
 		
@@ -148,21 +155,21 @@ public class TMS {
 
 		//Enter 7.
 		else if(choice==7) {
-			 File busFile = new File("transport/TransportFiles/"+registrationNo+".txt");
-			 if (busFile.delete()) {
-				 System.out.println("The bus profile has been deleted successfully!");
-				 isRegistered = false;
-				 feePaid = false;
-				 return("Bus Registration Deleted!");
-			 }
-			 else if (!busFile.exists()) {
-				 System.out.println("No record found! you haven't registered yet!");
-				 return("No Bus Registration File Found!");
-			 }
-			 else {
-				 System.out.println("Something went wrong");
-				 return("Error!");
-			 }
+			File busFile = new File("transport/TransportFiles/"+registrationNo+".txt");
+			if (busFile.delete()) {
+				System.out.println("The bus profile has been deleted successfully!");
+				isRegistered = false;
+				feePaid = false;
+				return("Bus Registration Deleted!");
+			}
+			else if (!busFile.exists()) {
+				System.out.println("No record found! you haven't registered yet!");
+				return("No Bus Registration File Found!");
+			}
+			else {
+				System.out.println("Something went wrong");
+				return("Error!");
+			}
 		}
 		else if(choice==0) {
 			System.out.println("Exiting...");
@@ -175,25 +182,39 @@ public class TMS {
 	}
 	
 	public static int Menu() {
-		Scanner input = new Scanner(System.in);
-		System.out.println("Enter Corresponding Number to Select the option :");
-		System.out.println("1. Bus Routes");
-		System.out.println("2. Bus Fees");
-		System.out.println("3. Bus Registration");
-		System.out.println("4. Update Info");
-		System.out.println("5. Fee Payment");
-		System.out.println("6. Bus Profile");
-		System.out.println("7. Delete Bus Registration");
-		System.out.println("0. Leave Menu");
-		int c = input.nextInt();
-		return(c);
+		try {
+			Scanner input = new Scanner(System.in);
+			System.out.println("Enter Corresponding Number to Select the option :");
+			System.out.println("1. Bus Routes");
+			System.out.println("2. Bus Fees");
+			System.out.println("3. Bus Registration");
+			System.out.println("4. Update Info");
+			System.out.println("5. Fee Payment");
+			System.out.println("6. Bus Profile");
+			System.out.println("7. Delete Bus Registration");
+			System.out.println("0. Leave Menu");
+			String c = input.next();
+			return(Integer.parseInt(c));
+		}
+		catch(InputMismatchException e) {
+			System.out.println("Input Mismatch! Input can only be integer.");
+			return(-1);
+		}
 	}
 
     public static void manage (String regNumber) {
     	int choose = Menu();
+    	
     	while(choose!=0) {
-    		String res = Choices(choose, regNumber);
-    		log.add(res);
+    		
+    		if(choose!=-1) {
+    			String res = Choices(choose, regNumber);
+    			log.add(res);
+    			if(res.equalsIgnoreCase("Exiting Transport Services!")) {
+    				break;
+    			}
+    		}
+    		
     		choose = Menu();
     	}
     }
@@ -233,7 +254,6 @@ public class TMS {
         System.out.println("Stops -->\nNawal Anchorage\n Bhander \n Sowan Garden\n Al Shifa Hospital\n Toyota " +
                 "Motors\n\n");
 
-
     }
 
     //    bus registration
@@ -264,11 +284,11 @@ public class TMS {
         Scanner input = new Scanner(System.in);
         String route;
         String result = "";
-        while(result!="Enter valid route no!"){
+        do {
             System.out.println("Enter your route :");
             route = input.next();
             result = RouteChecker(route);
-        }
+        } while(result=="Enter valid route no!");
         return(result);
     }
     
@@ -324,13 +344,12 @@ public class TMS {
     
     static String busStop(String route){
         Scanner input = new Scanner(System.in);
-        String routeName;
         String result = "";
-        while(result!="Enter valid stop name!") {
+        do {
             System.out.println("Enter the stop name :");
-            routeName = input.nextLine();
+            String routeName = input.next();
             result = StopChecker(routeName, route);
-        }
+        } while(result=="Enter valid stop name!");
         return result;
     }
 
@@ -370,11 +389,11 @@ public class TMS {
     static String busDropOff(){
         Scanner input = new Scanner(System.in);
     	String dropOffTime = "";
-        while(dropOffTime != "Kindly enter valid input!") {
+        do {
             System.out.println("Enter your preferred timing for drop-off\n1. 1:30 PM\n2. 2:30 PM\n3. 5:30 PM");
             String selectionDropOff = input.next();
             dropOffTime = DropOffChecker(selectionDropOff);
-        }
+        } while(dropOffTime == "Kindly enter valid input!");
         return(dropOffTime);
     }
     
@@ -396,12 +415,12 @@ public class TMS {
     static String busPickUp(){
         Scanner input = new Scanner(System.in);
         String pickUpTime = "";
-        while(pickUpTime != "Kindly enter valid input!") {
+        do {
 //            selecting the pick-up timing
             System.out.println("Enter your preferred timing for pick-up\n1.  8 AM\n2. 10 AM\n3. 12 AM");
             String selectionPickUp = input.next();
             pickUpTime = PickUpChecker(selectionPickUp);
-        }
+        } while(pickUpTime == "Kindly enter valid input!");
         return(pickUpTime);
     }
 
@@ -436,14 +455,13 @@ public class TMS {
 
     //  payment Method
 
-    static void paymentMethod(boolean isRegistered) {
+    static String paymentMethod(boolean isRegistered) {
         if (isRegistered) {
             Desktop desk = Desktop.getDesktop();
             Scanner input = new Scanner(System.in);
 
             while (true) {
                 System.out.println("Select your payment method :\n1. JazzCash\n2. HBL\n3. Bank Alfalah");
-                try {
                     int option = input.nextInt();
                     if (option >= 1 && option <= 3) {
                         switch (option) {
@@ -452,42 +470,50 @@ public class TMS {
                                 try {
                                     desk.browse(new URI("https://www.jazzcash.com.pk"));
                                     System.out.println("Thank you for using JazzCash for paying fee");
+                                    return("Jazzcash Payment Successful!");
 
                                 } catch (IOException | URISyntaxException e) {
                                     System.out.println("Sorry we found an issue try again!");
+                                    return("Jazzcash Payment Failed!");
                                 }
                             }
                             case 2 -> {
                                 try {
                                     desk.browse(new URI("https://www.hblibank.com.pk"));
                                     System.out.println("Thank you for using HBL for paying fee");
+                                    return("HBL Payment Successful!");
                                     
                                 } catch (IOException | URISyntaxException e) {
                                     System.out.println("Sorry we found an issue try again!");
+                                    return("HBL Payment Failed!");
                                 }
                             }
                             case 3 -> {
                                 try {
                                     desk.browse(new URI("https://netbanking.bankalfalah.com/"));
                                     System.out.println("Thank you for using Bank Alfalah for paying fee");
+                                    return("Bank Alfalah Payment Successful!");
 
                                 } catch (IOException | URISyntaxException e) {
                                     System.out.println("Sorry we found an issue try again!");
+                                    return("Bank Alfalah Payment Failed!");
                                 }
                             }
                         }
 
                         break;
-                    } else System.out.println("Enter appropriate option !");
-                } catch (Exception e) {
-                    System.out.println("Invalid input !");
-                    input.nextLine(); //to clear the  buffer
-                }
-
+                    } 
+                    else {
+                    	System.out.println("Enter appropriate option !");
+                    	return("Invalid Input!");
+                    }
             }
-
-
-        } else System.out.println("you have to register first to proceed Payment!");
+            return("Registration Found!");
+        } 
+        else {
+        	System.out.println("you have to register first to proceed Payment!");
+        	return("No Registration Found!");
+        }
 
     }
 
@@ -497,6 +523,5 @@ public class TMS {
         if (busFile.exists()) return true;
         else return false;
     }
-
 
 }

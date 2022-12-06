@@ -1,9 +1,9 @@
 Registration No                  : FA21-BCS-030
-Bus ID                           : 1993
+Bus ID                           : 1919
 Route                            : 8
 Stop Name                        : Bhander
 Fee                              : 21000
 PickUp Timing                    : 8 AM
 DropOff Timing                   : 5:30 PM
-Registered at                    : 26-11-2022 || 8:20 PM
+Registered at                    : 29-11-2022 || 12:33 AM
 
